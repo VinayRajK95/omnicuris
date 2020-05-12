@@ -42,26 +42,30 @@ public class SectionHeaderFooterView: UITableViewHeaderFooterView {
     }()
     
     var isCelcius: Bool = true {
-        didSet {
-            let label = isCelcius ? temparature : tempInFah
-            let transitionOptions: UIView.AnimationOptions = [.transitionFlipFromRight, .showHideTransitionViews]
-            UIView.transition(with: temperatureLabel, duration: 1.0, options: transitionOptions, animations: {
-                self.temperatureLabel.text = label
-            })
+        didSet{
+            let text = isCelcius ? tempInCel : tempInFah
+            self.temperatureLabel.text = text
         }
     }
     
-    var tempInFah: String = ""{
-        didSet {
-            tempInFah += "°F"
-        }
-    }
+    fileprivate var tempInFah: String = ""
+    
+    fileprivate var tempInCel: String = ""
     
     @objc var temparature: String = "" {
         didSet{
-            tempInFah = "\(((Float(temparature) ?? 0) * 9/5) + 32)"
-            temparature += "°C"
-            temperatureLabel.text = temparature
+            _temperature = temparature
+        }
+    }
+    
+    fileprivate var _temperature: String {
+        get{
+            return temparature
+        }
+        set {
+            let fahValue = ceil(((Double(temparature) ?? 0) * 9/5)) + 32
+            tempInFah = "\(fahValue)" + "°F"
+            tempInCel = newValue + "°C"
         }
     }
     
@@ -98,6 +102,11 @@ public class SectionHeaderFooterView: UITableViewHeaderFooterView {
     
     @objc func tempTapped( _ gesture: UITapGestureRecognizer) {
         self.isCelcius = !self.isCelcius
+        let text = isCelcius ? tempInCel : tempInFah
+        let transitionOptions: UIView.AnimationOptions = [.transitionFlipFromRight, .showHideTransitionViews]
+        UIView.transition(with: temperatureLabel, duration: 1.0, options: transitionOptions, animations: {
+            self.temperatureLabel.text = text
+        })
         delegate.updateCelcius(section: section,isCelcius: isCelcius)
     }
     
