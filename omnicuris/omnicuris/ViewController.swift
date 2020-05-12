@@ -131,7 +131,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate, Expandable
     
     fileprivate func reloadSection(section: Int) {
         weatherTableView.beginUpdates()
-        weatherTableView.reloadSections(IndexSet(integer: section), with: .fade)
+        weatherTableView.reloadSections(IndexSet(integer: section), with: .automatic)
         weatherTableView.endUpdates()
     }
 
